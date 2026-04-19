@@ -1,33 +1,53 @@
 import { useNavigate, Link } from 'react-router-dom'
+import { useState } from 'react'
 
 export default function Login() {
   const navigate = useNavigate()
 
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    // simulate login
     navigate('/appointments')
+  }
+
+  const handleDemoFill = () => {
+    setEmail('demo@clinic.com')
+    setPassword('demo123')
   }
 
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+      
       {/* Decorative orbs */}
       <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full glass-orb pointer-events-none" />
       <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full glass-orb pointer-events-none" />
 
       <main className="w-full max-w-md px-6 relative z-20">
         <div className="bg-surface-container-lowest rounded-xl soft-elevation p-8 flex flex-col gap-8">
+
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-extrabold text-on-surface tracking-tight leading-tight font-headline">Welcome Back</h1>
-            <p className="text-on-surface-variant font-medium opacity-70">Experience your clinical sanctuary</p>
+            <h1 className="text-3xl font-extrabold text-on-surface tracking-tight leading-tight font-headline">
+              Welcome Back
+            </h1>
+            <p className="text-on-surface-variant font-medium opacity-70">
+              Experience your clinical sanctuary
+            </p>
           </div>
 
           {/* Tabs */}
           <div className="bg-surface-container-low p-1.5 rounded-full flex items-center">
-            <button className="flex-1 py-2.5 rounded-full text-sm font-bold bg-surface-container-highest text-primary transition-all">
+            <button className="flex-1 py-2.5 rounded-full text-sm font-bold bg-surface-container-highest text-primary">
               Login
             </button>
-            <Link to="/signup" className="flex-1 py-2.5 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-center">
+            <Link
+              to="/signup"
+              className="flex-1 py-2.5 rounded-full text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-center"
+            >
               Sign Up
             </Link>
           </div>
@@ -35,30 +55,66 @@ export default function Login() {
           {/* Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
+
+              {/* Email */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-4">Email Address</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-4">
+                  Email Address
+                </label>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">mail</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">
+                    mail
+                  </span>
                   <input
                     type="email"
-                    className="w-full bg-surface-container-low border-none rounded-full py-3.5 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-surface-container-low rounded-full py-3.5 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
                     placeholder="name@clinic.com"
                   />
                 </div>
               </div>
+
+              {/* Password */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-4">Password</label>
+                <label className="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-4">
+                  Password
+                </label>
                 <div className="relative">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">lock</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">
+                    lock
+                  </span>
                   <input
                     type="password"
-                    className="w-full bg-surface-container-low border-none rounded-full py-3.5 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-surface-container-low rounded-full py-3.5 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
                     placeholder="••••••••"
                   />
                 </div>
               </div>
             </div>
-            <div className="pt-2">
+
+            {/* Buttons */}
+            <div className="pt-2 space-y-3">
+
+              {/* Demo Button */}
+              <button
+                type="button"
+                onClick={handleDemoFill}
+                className="w-full bg-surface-container-high text-on-surface font-semibold py-4 rounded-xl flex flex-col items-center justify-center gap-1 hover:bg-surface-container-highest transition-all border border-surface-container-highest"
+              >
+                <div className="flex items-center gap-2">
+                  <span>Use Demo Account</span>
+                </div>
+
+                {/* Extra info */}
+                <span className="text-xs text-on-surface-variant opacity-70">
+                  demo@clinic.com • demo123
+                </span>
+              </button>
+
+              {/* Submit */}
               <button
                 type="submit"
                 className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
@@ -77,7 +133,7 @@ export default function Login() {
             </span>
           </div>
 
-          {/* Social Login */}
+          {/* Social */}
           <div className="flex gap-4">
             <button className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-full bg-surface-container-low hover:bg-surface-container-high transition-colors">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -99,12 +155,14 @@ export default function Login() {
 
         <p className="mt-8 text-center text-on-surface-variant text-sm font-medium">
           Need clinical assistance?{' '}
-          <a href="#" className="text-primary font-bold hover:underline">Contact Support</a>
+          <a href="#" className="text-primary font-bold hover:underline">
+            Contact Support
+          </a>
         </p>
       </main>
 
-      {/* Background image strip */}
-      <div className="fixed bottom-0 left-0 w-full h-1/4 opacity-10 pointer-events-none bg-gradient-to-t from-surface-container-highest to-transparent" />
+      {/* Background */}
+      <div className="fixed bottom-0 left-0 w-full h-1/4 opacity-10 bg-gradient-to-t from-surface-container-highest to-transparent" />
     </div>
   )
 }

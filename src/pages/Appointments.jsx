@@ -116,6 +116,7 @@ export default function Appointments() {
       )}
 
       {/* Past Appointments */}
+      {pastAppointments.length > 0 && (
       <section className="space-y-6 pb-8">
         <div className="flex items-center gap-4">
           <span className="w-12 h-[2px] bg-secondary-container" />
@@ -167,6 +168,7 @@ export default function Appointments() {
           ))}
         </div>
       </section>
+      )}
     </div>
   )
 }
