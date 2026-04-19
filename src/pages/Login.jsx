@@ -15,8 +15,8 @@ export default function Login() {
   }
 
   const handleDemoFill = () => {
-    setEmail('demo@clinic.com')
-    setPassword('demo123')
+    setEmail('demo@medplus.com')
+    setPassword('demo1234')
   }
 
   return (
@@ -70,7 +70,7 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-surface-container-low rounded-full py-3.5 pl-12 pr-4 text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
-                    placeholder="name@clinic.com"
+                    placeholder="name@medplus.com"
                   />
                 </div>
               </div>
@@ -110,7 +110,7 @@ export default function Login() {
 
                 {/* Extra info */}
                 <span className="text-xs text-on-surface-variant opacity-70">
-                  demo@clinic.com • demo123
+                  demo@medplus.com • demo1234
                 </span>
               </button>
 
@@ -119,7 +119,7 @@ export default function Login() {
                 type="submit"
                 className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
               >
-                Sign In to Dashboard
+                Sign In
                 <span className="material-symbols-outlined">arrow_forward</span>
               </button>
             </div>

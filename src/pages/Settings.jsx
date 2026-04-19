@@ -158,7 +158,7 @@ export default function Settings() {
                 <span className="material-symbols-outlined text-sm">photo_camera</span>
               </button>
             </div>
-            <h3 className="text-xl font-bold font-headline text-on-surface">Elena Rodriguez</h3>
+            <h3 className="text-xl font-bold font-headline text-on-surface">Mohamed Bensalem</h3>
             <p className="text-sm text-on-surface-variant mb-6">Patient since October 2023</p>
             <div className="w-full space-y-3">
               <div className="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between">
@@ -181,7 +181,7 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Full Name</label>
                   <input
                     type="text"
-                    defaultValue="Elena Rodriguez"
+                    defaultValue="Mohamed Bensalem"
                     className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all"
                   />
                 </div>
@@ -189,7 +189,7 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Email Address</label>
                   <input
                     type="email"
-                    defaultValue="elena.rodriguez@example.com"
+                    defaultValue="mohamed.bensalem@example.com"
                     className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all"
                   />
                 </div>
@@ -197,7 +197,7 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Phone Number</label>
                   <input
                     type="tel"
-                    defaultValue="+1 (555) 0123-4567"
+                    defaultValue="+212 601 234 567"
                     className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all"
                   />
                 </div>
@@ -205,7 +205,6 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Preferred Language</label>
                   <select className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all appearance-none">
                     <option>English (United States)</option>
-                    <option>Spanish (Castilian)</option>
                     <option>French (Standard)</option>
                   </select>
                 </div>

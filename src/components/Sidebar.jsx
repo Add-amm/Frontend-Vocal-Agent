@@ -38,7 +38,7 @@ export default function Sidebar() {
           </span>
         </div>
         <h2 className="text-lg font-bold text-on-surface font-headline">
-          Serene Clinic
+          Medical Plus
         </h2>
       </div>
 

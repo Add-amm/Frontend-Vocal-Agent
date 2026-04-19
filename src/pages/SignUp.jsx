@@ -18,7 +18,7 @@ export default function SignUp() {
         <div className="w-full max-w-xl">
 
           {/* Card */}
-          <div className="bg-surface-container-lowest rounded-xl p-8 md:p-12 shadow-[0_20px_40px_rgba(47,52,48,0.06)] border border-outline-variant/15">
+          <div className="bg-surface-container-lowest rounded-xl p-8 md:p-15 shadow-[0_20px_40px_rgba(47,52,48,0.06)] border border-outline-variant/15">
             <div className="mb-8">
               <h2 className="font-headline text-2xl font-bold text-on-surface">Create Account</h2>
               <p className="text-on-surface-variant font-body text-sm mt-1">Please provide your details to register with the clinic.</p>
@@ -41,7 +41,7 @@ export default function SignUp() {
                 <input
                   id="full_name"
                   type="text"
-                  placeholder="Evelyn Harper"
+                  placeholder="Mohamed Bensalem"
                   className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
                 />
               </div>
@@ -53,7 +53,7 @@ export default function SignUp() {
                   <input
                     id="email"
                     type="email"
-                    placeholder="evelyn@example.com"
+                    placeholder="mohamed@example.com"
                     className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
                   />
                 </div>
@@ -63,7 +63,7 @@ export default function SignUp() {
                   <input
                     id="phone"
                     type="tel"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+212 000 000 000"
                     className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
                   />
                 </div>
