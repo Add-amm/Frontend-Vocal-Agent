@@ -1,30 +1,51 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import formatToMonthYear from '../utils/date_utils';
+
+const API_BASE = 'http://localhost:3000';
 
 function PasswordModal({ onClose }) {
   const [form, setForm] = useState({ current: '', next: '', confirm: '' })
   const [done, setDone] = useState(false)
   const [error, setError] = useState('')
 
+  const token = localStorage.getItem('token')
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
     setError('')
   }
 
-  const handleSubmit = () => {
-    if (!form.current || !form.next || !form.confirm) {
-      setError('Please fill in all fields.')
-      return
+  const handleSubmit = async () => {
+    
+    try {
+      
+      const res = await fetch(`${API_BASE}/auth/user/changepassword`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+          "currentPassword": form.current,
+          "newPassword": form.next,
+          "confirmNewPassword": form.confirm
+          }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          const errorMessage = data.message;
+          
+          setError(errorMessage);
+          return
+        }
+        
+            setDone(true)
+            setTimeout(onClose, 1500)
+
+    } catch (error) {
+      setError(error.message);
     }
-    if (form.next !== form.confirm) {
-      setError('New passwords do not match.')
-      return
-    }
-    if (form.next.length < 8) {
-      setError('Password must be at least 8 characters.')
-      return
-    }
-    setDone(true)
-    setTimeout(onClose, 1500)
   }
 
   return (
@@ -130,10 +151,78 @@ export default function Settings() {
   const [saved, setSaved] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
 
-  const handleSave = (e) => {
+  const [id, setId] = useState('');
+  const [nom_complet, setNomComplet] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone_num, setPhoneNum] = useState('');
+  const [created_at, setCreatedAt] = useState('');
+
+  const token = localStorage.getItem('token');
+  
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+
+        const res = await fetch(`${API_BASE}/auth/profile`, {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch profile');
+        }
+
+        const data = await res.json();
+
+        setId(data.id);
+        setNomComplet(data.nom_complet);
+        setEmail(data.email);
+        setPhoneNum(data.phone_num);
+        setCreatedAt(formatToMonthYear(data.createdAt));
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleSave = async (e) => {
     e.preventDefault()
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/self-user`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ nom_complet, email, phone_num }),
+      });
+
+      const raw = await res.text();
+
+      if (!res.ok) {
+        let message = `Erreur serveur (${res.status})`;
+        try {
+          const parsed = JSON.parse(raw);
+          message = parsed?.message || JSON.stringify(parsed) || message;
+        } catch {
+          if (raw) message = raw;
+        }
+        throw new Error(message);
+      }
+
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
+
+    } catch (err) {
+      console.error('Erreur login:', err);
+      alert(err.message || 'Erreur lors de la connexion');
+    }
   }
 
   return (
@@ -158,12 +247,12 @@ export default function Settings() {
                 <span className="material-symbols-outlined text-sm">photo_camera</span>
               </button>
             </div>
-            <h3 className="text-xl font-bold font-headline text-on-surface">Mohamed Bensalem</h3>
-            <p className="text-sm text-on-surface-variant mb-6">Patient since October 2023</p>
+            <h3 className="text-xl font-bold font-headline text-on-surface">{nom_complet}</h3>
+            <p className="text-sm text-on-surface-variant mb-6">Patient since {created_at}</p>
             <div className="w-full space-y-3">
               <div className="bg-surface-container-lowest p-4 rounded-2xl flex items-center justify-between">
                 <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest">Health ID</span>
-                <span className="text-sm font-bold text-primary font-headline">#SRN-49201</span>
+                <span className="text-sm font-bold text-primary font-headline">#{id}</span>
               </div>
             </div>
           </section>
@@ -181,6 +270,8 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Full Name</label>
                   <input
                     type="text"
+                    value={nom_complet}
+                    onChange={(e) => setNomComplet(e.target.value)}
                     defaultValue="Mohamed Bensalem"
                     className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all"
                   />
@@ -189,6 +280,8 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Email Address</label>
                   <input
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     defaultValue="mohamed.bensalem@example.com"
                     className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all"
                   />
@@ -197,6 +290,8 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-on-surface-variant ml-2">Phone Number</label>
                   <input
                     type="tel"
+                    value={phone_num}
+                    onChange={(e) => setPhoneNum(e.target.value)}
                     defaultValue="+212 601 234 567"
                     className="w-full bg-surface-container-lowest border-none ring-1 ring-primary/10 focus:ring-2 focus:ring-primary rounded-full px-6 py-4 text-on-surface transition-all"
                   />

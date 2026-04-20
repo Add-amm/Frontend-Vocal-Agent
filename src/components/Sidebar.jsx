@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { ShieldAlert } from 'lucide-react'
 
+const API_BASE = 'http://localhost:3000';
+
 const navItems = [
   { to: '/book', icon: 'record_voice_over', label: 'Take Appointment' },
   { to: '/appointments', icon: 'history', label: 'History & Management' },
@@ -22,9 +24,31 @@ export default function Sidebar() {
         : 'text-on-background opacity-80 hover:bg-surface-container-highest'
     }`
 
-  const handleLogout = () => {
-    setShowLogout(false)
-    navigate('/login')
+  const handleLogout = async () => {
+
+    const token = localStorage.getItem('token');
+
+    try {
+
+      const res = await fetch(`${API_BASE}/auth/logout`, {
+          method: 'POST',
+          headers: { 
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+      if (!res.ok) {
+          throw new Error('Failed to fetch profile');
+      }
+
+      localStorage.removeItem('token')
+      
+      setShowLogout(false)
+      navigate('/login')
+
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   }
 
   return (

@@ -1,16 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+
+const API_BASE = 'http://localhost:3000';
 
 export default function BookAppointment() {
   const [step, setStep] = useState(0)
   const [listening, setListening] = useState(false)
   const navigate = useNavigate()
 
+  const token = localStorage.getItem('token');
+
+  const [nom_complet, setNomComplet] = useState('');
+  
+  useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+  
+          const res = await fetch(`${API_BASE}/auth/profile`, {
+            method: 'GET',
+            headers: { 
+              'Authorization': `Bearer ${token}`
+            }
+          });
+  
+          if (!res.ok) {
+            throw new Error('Failed to fetch profile');
+          }
+  
+          const data = await res.json();
+  
+          setNomComplet(data.nom_complet);
+  
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      fetchProfile();
+    }, []);
+
   return (
     <div className="flex-grow flex flex-col items-center justify-center px-6">
       <div className="max-w-2xl w-full text-center space-y-12">
         <div className="space-y-4">
-          <h2 className="text-5xl font-extrabold tracking-tight text-on-surface">Good Morning, User</h2>
+          <h2 className="text-5xl font-extrabold tracking-tight text-on-surface">Good Morning, {nom_complet}</h2>
           <p className="text-xl text-on-surface-variant font-light">How can I assist you today?</p>
         </div>
         <div className="flex flex-col items-center gap-8">

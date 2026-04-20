@@ -1,11 +1,63 @@
 import { useNavigate, Link } from 'react-router-dom'
+import { useState } from 'react'
+
+const API_BASE = 'http://localhost:3000';
 
 export default function SignUp() {
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    navigate('/appointments')
+  const [nom_complet, setNomComplet] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone_num, setPhoneNum] = useState('');
+  const [mdp, setMdp] = useState('');
+  const [confirm_password, setConfirmPassword] = useState('');
+  const [isSignedUp, setIsSignedUp] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!nom_complet || !email || !phone_num || !mdp || !confirm_password) {
+      alert('Tous les champs sont nécessaires.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          nom_complet,
+          email,
+          phone_num,
+          mdp,
+          confirm_password 
+        }),
+      });
+
+      const raw = await res.text();
+
+      if (!res.ok) {
+        let message = `Erreur serveur (${res.status})`;
+        try {
+          const parsed = JSON.parse(raw);
+          message = parsed?.message || JSON.stringify(parsed) || message;
+        } catch {
+          if (raw) message = raw;
+        }
+        throw new Error(message);
+      }
+
+      setIsSignedUp(true);
+
+      setTimeout(() => {
+        setIsSignedUp(false);
+        navigate('/login');
+      }, 3000);
+
+    } catch (err) {
+      console.error('Erreur login:', err);
+      alert(err.message || 'Erreur lors de la connexion');
+    }
   }
 
   return (
@@ -40,6 +92,8 @@ export default function SignUp() {
                 <label className="block font-label text-sm font-medium text-on-surface-variant ml-1" htmlFor="full_name">Full Name</label>
                 <input
                   id="full_name"
+                  value={nom_complet}
+                  onChange={(e) => setNomComplet(e.target.value)}
                   type="text"
                   placeholder="Mohamed Bensalem"
                   className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
@@ -52,6 +106,8 @@ export default function SignUp() {
                   <label className="block font-label text-sm font-medium text-on-surface-variant ml-1" htmlFor="email">Email Address</label>
                   <input
                     id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     placeholder="mohamed@example.com"
                     className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
@@ -62,6 +118,8 @@ export default function SignUp() {
                   <label className="block font-label text-sm font-medium text-on-surface-variant ml-1" htmlFor="phone">Phone Number</label>
                   <input
                     id="phone"
+                    value={phone_num}
+                    onChange={(e) => setPhoneNum(e.target.value)}
                     type="tel"
                     placeholder="+212 000 000 000"
                     className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
@@ -74,6 +132,8 @@ export default function SignUp() {
                 <label className="block font-label text-sm font-medium text-on-surface-variant ml-1" htmlFor="password">Password</label>
                 <input
                   id="password"
+                  value={mdp}
+                  onChange={(e) => setMdp(e.target.value)}
                   type="password"
                   placeholder="••••••••"
                   className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
@@ -85,6 +145,8 @@ export default function SignUp() {
                 <label className="block font-label text-sm font-medium text-on-surface-variant ml-1" htmlFor="confirm_password">Confirm Password</label>
                 <input
                   id="confirm_password"
+                  value={confirm_password}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   type="password"
                   placeholder="••••••••"
                   className="w-full bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full px-6 py-4 text-on-surface transition-all placeholder:text-outline-variant"
@@ -94,6 +156,7 @@ export default function SignUp() {
               <div className="pt-4">
                 <button
                   type="submit"
+                  onClick={handleSubmit}
                   className="w-full bg-primary hover:bg-primary-dim text-on-primary font-headline font-bold py-4 rounded-full transition-all duration-200 shadow-lg shadow-primary/10"
                 >
                   Create Account
@@ -103,6 +166,28 @@ export default function SignUp() {
           </div>
         </div>
       </main>
+
+      {isSignedUp && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-surface-container-lowest rounded-2xl p-8 shadow-2xl border border-outline-variant/20 max-w-sm w-full text-center space-y-4 animate-fade-in">
+            
+            <div className="text-2xl font-bold text-primary">
+              Inscription réussie
+            </div>
+
+            <p className="text-on-surface-variant text-sm">
+              Votre compte a été créé avec succès.
+            </p>
+
+            <button
+              onClick={() => setIsSignedUp(false)}
+              className="mt-4 w-full bg-primary text-on-primary font-semibold py-3 rounded-full hover:bg-primary-dim transition"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

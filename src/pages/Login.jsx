@@ -1,22 +1,60 @@
 import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
 
+const API_BASE = 'http://localhost:3000';
+
 export default function Login() {
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // simulate login
-    navigate('/appointments')
+    if (!email || !password) {
+      alert('Veuillez renseigner email et password.');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, mdp: password }),
+      });
+
+      const raw = await res.text();
+
+      if (!res.ok) {
+        let message = `Erreur serveur (${res.status})`;
+        try {
+          const parsed = JSON.parse(raw);
+          message = parsed?.message || JSON.stringify(parsed) || message;
+        } catch {
+          if (raw) message = raw;
+        }
+        throw new Error(message);
+      }
+
+      const data = JSON.parse(raw);
+
+      if (!data?.token) {
+        throw new Error('Token manquant dans la réponse du serveur.');
+      }
+
+      localStorage.setItem('token', data.token);
+      // simulate login
+      navigate('/appointments');
+    } catch (err) {
+      console.error('Erreur login:', err);
+      alert(err.message || 'Erreur lors de la connexion');
+    }
   }
 
   const handleDemoFill = () => {
     setEmail('demo@medplus.com')
-    setPassword('demo1234')
+    setPassword('password123')
   }
 
   return (
@@ -110,13 +148,14 @@ export default function Login() {
 
                 {/* Extra info */}
                 <span className="text-xs text-on-surface-variant opacity-70">
-                  demo@medplus.com • demo1234
+                  demo@medplus.com • password123
                 </span>
               </button>
 
               {/* Submit */}
               <button
                 type="submit"
+                onClick={handleSubmit}
                 className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
               >
                 Sign In
